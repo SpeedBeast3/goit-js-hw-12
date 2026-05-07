@@ -11,6 +11,8 @@ const lightbox = new SimpleLightbox(".gallery a", {
 });
 
 export function createGallery(images) {
+  if (!gallery) return;
+
   const markup = images
     .map(
       img => `
@@ -28,27 +30,31 @@ export function createGallery(images) {
     )
     .join("");
 
-
-      gallery.insertAdjacentHTML("beforeend", markup);
+  gallery.insertAdjacentHTML("beforeend", markup);
   lightbox.refresh();
-};
+}
 
 export function clearGallery() {
+  if (!gallery) return;
   gallery.innerHTML = "";
 }
 
 export function showLoader() {
+  if (!loader) return;
   loader.classList.remove("hidden");
 }
 
 export function hideLoader() {
+  if (!loader) return;
   loader.classList.add("hidden");
 }
 
 export function showLoadMoreButton() {
+  if (!loadMoreBtn) return;
   loadMoreBtn.classList.remove("hidden");
 }
 
 export function hideLoadMoreButton() {
+  if (!loadMoreBtn) return;
   loadMoreBtn.classList.add("hidden");
 }

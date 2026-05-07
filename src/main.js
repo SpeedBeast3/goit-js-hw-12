@@ -3,6 +3,7 @@ import "izitoast/dist/css/iziToast.min.css";
 import "./css/style.css";
 
 import { getImagesByQuery } from "./js/pixabay-api.js";
+
 import {
   createGallery,
   clearGallery,
@@ -22,11 +23,11 @@ const perPage = 15;
 form.addEventListener("submit", async e => {
   e.preventDefault();
 
- currentQuery = e.target.elements["search-text"].value.trim();
+  currentQuery = e.target.elements["search-text"].value.trim();
 
-if (!currentQuery) return;
+  if (!currentQuery) return;
 
-    page = 1;
+  page = 1;
 
   clearGallery();
   hideLoadMoreButton();
@@ -46,10 +47,16 @@ if (!currentQuery) return;
 
     createGallery(data.hits);
 
-    if (data.totalHits > perPage) {
-  showLoadMoreButton();
-}
+    const totalPages = Math.ceil(data.totalHits / perPage);
 
+    if (totalPages > 1) {
+      showLoadMoreButton();
+    } else {
+      iziToast.info({
+        message:
+          "We're sorry, but you've reached the end of search results.",
+      });
+    }
   } catch (err) {
     iziToast.error({
       title: "Error",
@@ -63,6 +70,7 @@ if (!currentQuery) return;
 loadMoreBtn.addEventListener("click", async () => {
   page += 1;
 
+  hideLoadMoreButton();
   showLoader();
 
   try {
@@ -79,6 +87,8 @@ loadMoreBtn.addEventListener("click", async () => {
         message:
           "We're sorry, but you've reached the end of search results.",
       });
+    } else {
+      showLoadMoreButton();
     }
 
     const card = document
